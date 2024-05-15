@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a simple example of using TypeSense with Next.js 14 and InstantSearch.js
+
+## Prerequisites
+
+Before you get started, make sure you have the following installed:
+
+- Docker
+- Bun
 
 ## Getting Started
 
-First, run the development server:
+First, start TypeSense with Docker:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up -d
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Next, go ahead and install the app dependencies:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+bun install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Once installed, we can then seed TypeSense with our sample data:
 
-## Learn More
+```bash
+bun ./scripts/seed.ts
+```
 
-To learn more about Next.js, take a look at the following resources:
+If seeding doesn't work there, you can seed via cURL:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+curl http://localhost:8108/collections/movies/documents/import \
+-X POST \
+-H "X-TYPESENSE-API-KEY: xyz" \
+--data-binary @./data/movies.jsonl
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Now, run the Next.js development dev server:
 
-## Deploy on Vercel
+```bash
+bun run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Open [http://localhost:3000](http://localhost:3000) with your browser. You should see a listing of movies and be able to search through them!
